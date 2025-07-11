@@ -15,6 +15,6 @@ RUN pip install --no-cache-dir -r /requirements.txt
 VOLUME /config
 
 # Configure Services and Port
-CMD ["python3", "/__main__.py"]
+# testing CMD ["python3", "/__main__.py"]
 
 EXPOSE 3030
