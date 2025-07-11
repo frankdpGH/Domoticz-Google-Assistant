@@ -94,7 +94,7 @@ logger.addHandler(ch)
 # Generate and save random token with username
 if 'authToken' not in configuration:
     try:
-        with open(os.path.join(FILE_DIR, 'config/.token/.''+ configuration['auth_user']), 'r') as t:
+        with open(os.path.join(FILE_DIR, 'config/.token/.'+ configuration['auth_user']), 'r') as t:
             configuration['authToken'] = t.read()
             t.close()
     except FileNotFoundError:
