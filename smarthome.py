@@ -185,7 +185,7 @@ def AogGetDomain(device):
         return DOMAINS['scene']
     elif device["Type"] in ['Temp', 'Temp + Humidity', 'Temp + Humidity + Baro']:
         return DOMAINS['temperature']
-    elif device['Type'] in ['Thermostat', 'Setpoint']:
+    elif device["Type"] in ['Thermostat', 'Setpoint']:
         return DOMAINS['thermostat']
     elif 'Color Switch' == device["Type"]: 
         if "Dimmer" == device["SwitchType"]:
@@ -842,11 +842,17 @@ class SmartHomeReqHandler(OAuthReqHandler):
         s.send_message(500, "not supported")
 
     def forceDevicesSync(self):
+        user = self.getSessionUser()   #  ???????????????? allow sync triggered from domoticz
         userAgent = self.getUserAgent()
         enableReport = ReportState.enable_report_state()
-        if userAgent is None:
-            # return 500  # internal error
+#        if userAgent is None:
+        if user == None or user.get('uid', '') == '':
             userAgent = "1234"
+            logger.error("FYI Sync started from domoticz")
+           # return 500  # internal error
+#        if user == None or user.get('uid', '') == '':   ??????????? allow syn triggerd from domoticz
+#            userAgent = "1234"
+#            logger.error("FYI Sync started from domoticz")
 
         data = {"agentUserId": userAgent}
         if enableReport:
@@ -861,10 +867,10 @@ class SmartHomeReqHandler(OAuthReqHandler):
         return r
 
     def syncDevices(self, s):
-        user = self.getSessionUser()
-        if user is None or user.get('uid', '') == '':
-            s.redirect('login?redirect_uri={0}'.format('sync'))
-            return
+#        user = self.getSessionUser()   #  ???????????????? allow sync triggered from domoticz
+#        if user is None or user.get('uid', '') == '':
+#            s.redirect('login?redirect_uri={0}'.format('sync'))
+#            return
 
         r = self.forceDevicesSync()
         s.send_message(200, 'Synchronization request sent, status_code: ' + str(r))
@@ -1240,7 +1246,7 @@ class SmartHomeReqHandler(OAuthReqHandler):
         if rpstate == "UNKNOWN":
             rcontent = "?" 
             rtype = "?"
-        message = '{"device":"'+ cast.device.friendly_name + '","status":"' + rstatus + '","command":"' + rcommand  + '","volume":"' +rvolume +'","starttime":"' + stime + '","endtime":"' + etime + '","playstate":"' + rpstate + '","content":"' + rcontent + '","type":"' + rtype + '","message":"' + rmessage+ '"}'
+        message = '{"device":"'+ cast.device.friendly_name + '","uuid":"'+ str(cast.device.uuid) + '","status":"' + rstatus + '","command":"' + rcommand  + '","volume":"' +rvolume +'","starttime":"' + stime + '","endtime":"' + etime + '","playstate":"' + rpstate + '","content":"' + rcontent + '","type":"' + rtype + '","message":"' + rmessage+ '"}'
         s.send_json(200, message, False)
         logger.info(message)
 
@@ -1344,7 +1350,7 @@ class SmartHomeReqHandler(OAuthReqHandler):
                     message = message + ", '" + str(cc.device.friendly_name) + "'"               
         if command == "switchdevice":
             answ, message = SmartHomeReqHandler.switchdevice(itext[1])
-        if command == "status":
+        if command == "status":              # see status in old version together with arg and SmartHomeReqHandler.send_respa
             message = str(cast.status) 
 #        if command == "mediastatus":
 #            message = str(mc.status).replace("None","'None'")
