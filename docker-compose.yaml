@@ -1,7 +1,7 @@
 version: '3'
 services:
   dz-googleassistant:
-    image: dewgew/domoticz-google-assistant
+    image: frankdp/dzga-rpi:latest
     container_name: domoticz-google-assistant
     environment:
       - PUID=1010
