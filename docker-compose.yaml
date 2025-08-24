@@ -3,13 +3,14 @@ services:
   dz-googleassistant:
     image: frankdp/dzga-rpi:latest
     container_name: domoticz-google-assistant
+    # network_mode: host   # if using chromecast
     environment:
       - PUID=1010
       - PGID=1010
     ports:
-      - 3030:3030
+      - 3030:3030  # adapt to your own port
     volumes:
-      - /home/${USER}/Domoticz-Google-Assistant/config:/config
+      - /home/${USER}/Domoticz-Google-Assistant/config:/config #replace user here
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
