@@ -11,6 +11,7 @@ services:
       - 3030:3030  # adapt to your own port
     volumes:
       - /home/${USER}/Domoticz-Google-Assistant/config:/config #replace user here
+      - /home/${USER}/Domoticz-Google-Assistant/sound:/sound #replace user here
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
